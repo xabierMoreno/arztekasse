@@ -1,0 +1,113 @@
+openapi: 3.0.3
+info:
+  title: Store API Contract
+  version: 1.0.0
+tags:
+  - name: Store
+paths:
+  /api/v1/stores/{storeId}:
+    get:
+      tags:
+        - Store
+      summary: Find Store by StoreID
+      description: Returns asingle store
+      operationId: geStoreByStoreID
+      parameters:
+        - name: storeId
+          in: path
+          description: ID of store to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreResponseDTO'
+        '400':
+          description: Bad request
+        '404':
+          description: Store not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+  /api/v1/stores/{storeId}/business-hours:
+    get:
+      tags:
+        - Store
+      summary: Find businessHours by Store ID
+      description: Returns business of a single store
+      operationId: getBusinessHoursByStoreID
+      parameters:
+        - name: storeId
+          in: path
+          description: ID of store to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessHoursResponseDTO'
+        '400':
+          description: Bad request
+        '404':
+          description: Store not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+components:
+  schemas:
+    StoreResponseDTO:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StoreDTO'
+    StoreDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+    BusinessHoursResponseDTO:
+      type: object
+      properties:
+        businessHours:
+          $ref: '#/components/schemas/OperationsDayDTO'
+    OperationsDayDTO:
+      type: object
+      properties:
+        day:
+          type: string
+        operationsHours:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationsHoursDTO'
+    OperationsHoursDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        startTime:
+          type: string
+        endTime:
+          type: string
+    ApiErrorResponseDTO:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+        errorMessage:
+          type: string
